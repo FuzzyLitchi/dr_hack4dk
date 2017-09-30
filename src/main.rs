@@ -3,16 +3,18 @@ extern crate serde_derive;
 
 extern crate serde;
 extern crate serde_json;
+extern crate chrono;
 
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
+use chrono::NaiveDate;
 
 #[allow(non_snake_case)]
 #[derive(Serialize, Deserialize, Debug)]
 struct RadioProgram {
     allText: String,
-    date: String,
+    date: NaiveDate,
     filename: String,
     title: String,
     url: String,
