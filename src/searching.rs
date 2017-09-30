@@ -30,8 +30,11 @@ impl Searcher {
         let mut schema_builder = SchemaBuilder::default();
 
         //The searchable items
-        let title = schema_builder.add_text_field("title", TEXT | STORED);
         let all_text = schema_builder.add_text_field("allText", TEXT | STORED);
+        let date = schema_builder.add_text_field("date", TEXT | STORED);
+        let filename = schema_builder.add_text_field("filename", TEXT | STORED);
+        let title = schema_builder.add_text_field("title", TEXT | STORED);
+        let url = schema_builder.add_text_field("url", TEXT | STORED);
 
         let schema = schema_builder.build();
         let index = Index::create(index_dir.path(), schema.clone()).unwrap();
@@ -40,8 +43,11 @@ impl Searcher {
 
         for v in radio_programs(Path::new("programoversigter.json")) {
             index_writer.add_document(doc!(
+                all_text => v.allText,
+                date => v.date,
+                filename => v.filename,
                 title => v.title,
-                all_text => v.allText
+                url => v.url
             ));
         }
 

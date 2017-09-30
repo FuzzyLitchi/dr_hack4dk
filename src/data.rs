@@ -3,13 +3,12 @@ use std::path::Path;
 use std::io::prelude::*;
 use std::io::BufReader;
 use serde_json;
-use chrono::NaiveDate;
 
 #[allow(non_snake_case)]
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct RadioProgram {
     pub allText: String,
-    pub date: NaiveDate,
+    pub date: String,
     pub filename: String,
     pub title: String,
     pub url: String,

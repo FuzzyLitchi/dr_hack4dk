@@ -2,7 +2,6 @@
 extern crate serde_derive;
 
 extern crate serde_json;
-extern crate chrono;
 #[macro_use]
 extern crate tantivy;
 extern crate tempdir;
@@ -14,6 +13,7 @@ use searching::Searcher;
 
 fn main() {
     let searcher = Searcher::default();
+    println!("Searcher is ready!");
 
     for doc_address in searcher.search("Hello", 10) {
        let retrieved_doc = searcher.index.searcher().doc(&doc_address).unwrap();
