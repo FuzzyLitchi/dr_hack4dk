@@ -4,7 +4,7 @@ use tantivy::Index;
 use tantivy::query::QueryParser;
 use tantivy::collector::TopCollector;
 use tantivy::schema::*;
-use data::radio_programs;
+use data::{RadioProgram, radio_programs};
 
 pub struct Searcher {
     pub index: Index,
@@ -62,17 +62,21 @@ impl Searcher {
         )
     }
 
-    pub fn search(&self, query_string: &str, limit: usize) -> Vec<Document> {
+    pub fn search(&self, query_string: &str, limit: usize) -> Vec<RadioProgram> {
         let query = self.query_parser.parse_query(&query_string).unwrap();
 
         let mut top_collector = TopCollector::with_limit(limit);
 
         self.index.searcher().search(&*query, &mut top_collector).unwrap();
 
-        let mut results: Vec<Document> = Vec::with_capacity(limit);
+        let mut results: Vec<RadioProgram> = Vec::with_capacity(limit);
 
         for doc_address in top_collector.docs() {
-           results.push(self.index.searcher().doc(&doc_address).unwrap());
+           results.push(
+                RadioProgram::from_document(
+                    self.index.searcher().doc(&doc_address).unwrap()
+                )
+           );
         }
 
         results

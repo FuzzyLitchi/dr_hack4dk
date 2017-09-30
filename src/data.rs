@@ -3,6 +3,8 @@ use std::path::Path;
 use std::io::prelude::*;
 use std::io::BufReader;
 use serde_json;
+use tantivy::Document;
+use tantivy::schema::Value;
 
 #[allow(non_snake_case)]
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -12,6 +14,26 @@ pub struct RadioProgram {
     pub filename: String,
     pub title: String,
     pub url: String,
+}
+
+impl RadioProgram {
+    pub fn from_document(doc: Document) -> RadioProgram {
+        let mut values: Vec<String> = doc.field_values().iter().map(|field_value| {
+            match field_value.value() {
+                &Value::Str(ref string) => string.clone(),
+                _ => panic!("I am tired")
+            }
+        }).collect();
+
+        //I know this is bad and you're allowed to murder me ty
+        RadioProgram {
+            allText: values.remove(0),
+            date: values.remove(0),
+            filename: values.remove(0),
+            title: values.remove(0),
+            url: values.remove(0),
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
