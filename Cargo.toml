@@ -4,3 +4,7 @@ version = "0.1.0"
 authors = ["Emile Yvan Boutet Livoff <blemille@hotmail.com>"]
 
 [dependencies]
+serde = "1.0.15"
+serde_derive = "1.0.15"
+serde_json = "1.0.3"
+chrono = "0.4"
