@@ -1,7 +1,6 @@
 use std::path::Path;
 use tempdir::TempDir;
 use tantivy::Index;
-use tantivy::DocAddress;
 use tantivy::query::QueryParser;
 use tantivy::collector::TopCollector;
 use tantivy::schema::*;
@@ -63,13 +62,19 @@ impl Searcher {
         )
     }
 
-    pub fn search(&self, query_string: &str, limit: usize) -> Vec<DocAddress> {
+    pub fn search(&self, query_string: &str, limit: usize) -> Vec<Document> {
         let query = self.query_parser.parse_query(&query_string).unwrap();
 
         let mut top_collector = TopCollector::with_limit(limit);
 
         self.index.searcher().search(&*query, &mut top_collector).unwrap();
 
-        top_collector.docs()
+        let mut results: Vec<Document> = Vec::with_capacity(limit);
+
+        for doc_address in top_collector.docs() {
+           results.push(self.index.searcher().doc(&doc_address).unwrap());
+        }
+
+        results
     }
 }
