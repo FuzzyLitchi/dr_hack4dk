@@ -15,8 +15,7 @@ fn main() {
     let searcher = Searcher::default();
     println!("Searcher is ready!");
 
-    for doc_address in searcher.search("Hello", 10) {
-       let retrieved_doc = searcher.index.searcher().doc(&doc_address).unwrap();
-       println!("{}", searcher.index.schema().to_json(&retrieved_doc));
+    for docs in searcher.search("Hello", 10) {
+       println!("{:?}", docs);
     }
 }
