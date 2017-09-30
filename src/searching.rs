@@ -1,7 +1,9 @@
 use std::path::Path;
 use tempdir::TempDir;
 use tantivy::Index;
+use tantivy::DocAddress;
 use tantivy::query::QueryParser;
+use tantivy::collector::TopCollector;
 use tantivy::schema::*;
 use data::radio_programs;
 
@@ -53,5 +55,15 @@ impl Searcher {
             index_dir,
             query_parser,
         )
+    }
+
+    pub fn search(&self, query_string: &str, limit: usize) -> Vec<DocAddress> {
+        let query = self.query_parser.parse_query(&query_string).unwrap();
+
+        let mut top_collector = TopCollector::with_limit(limit);
+
+        self.index.searcher().search(&*query, &mut top_collector).unwrap();
+
+        top_collector.docs()
     }
 }
